@@ -1,6 +1,6 @@
 {
 	"name": "nyt-paywall-smasher",
-	"version": "1.0.4",
+	"version": "1.0.6",
 	"description": "Deletes paywall shhhh",
 	"main": "index.js",
 	"scripts": {

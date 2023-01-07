@@ -13,6 +13,40 @@ function removeElements() {
     removeByQuery('[role="dialog"]');
     removeByQuery('[class*="modal"]');
     removeByQuery("iframe");
+    removeByQuery("[aria-live]");
+    removeEmptyDiv();
+    overrideFixedPosition();
+}
+/**
+ * an empty div is typically some sort of overlay
+ */
+function removeEmptyDiv() {
+    Array.from(document.querySelectorAll("div"))
+        .filter(function (el) { return !el.hasChildNodes(); })
+        .forEach(function (el) { return el.remove(); });
+}
+function overrideFixedPosition() {
+    var selectors = [];
+    Array.from(document.styleSheets).forEach(function (styleSheet) {
+        try {
+            return Array.from(styleSheet.cssRules).forEach(function (_a) {
+                var _b;
+                var cssText = _a.cssText;
+                if (/position: fixed/.test(cssText)) {
+                    selectors = selectors.concat((_b = cssText.match(/\..+?\s/g)) !== null && _b !== void 0 ? _b : []);
+                }
+                return false;
+            });
+        }
+        catch (e) { }
+    });
+    selectors.forEach(function (sel) {
+        var _a;
+        try {
+            (_a = document.querySelector(sel)) === null || _a === void 0 ? void 0 : _a.setAttribute("style", "position: relative;");
+        }
+        catch (error) { }
+    });
 }
 function removeNoScrollClass(node) {
     Array.from(node.classList)
