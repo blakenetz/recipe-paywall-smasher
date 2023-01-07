@@ -1,5 +1,5 @@
 {
-	"name": "nyt-cooking",
+	"name": "nyt-paywall-smasher",
 	"version": "1.0.4",
 	"description": "Deletes paywall shhhh",
 	"main": "index.js",
@@ -11,14 +11,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/blakenetz/nyt-cooking.git"
+		"url": "git+https://github.com/blakenetz/nyt-paywall.git"
 	},
 	"author": "blake<blake.netzeband@gmail.com>",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/blakenetz/nyt-cooking/issues"
+		"url": "https://github.com/blakenetz/nyt-paywall/issues"
 	},
-	"homepage": "https://github.com/blakenetz/nyt-cooking#readme",
+	"homepage": "https://github.com/blakenetz/nyt-paywall#readme",
 	"dependencies": {
 		"web-ext": "^7.4.0"
 	},

@@ -1,6 +1,6 @@
 {
 	"manifest_version": 3,
-	"name": "NYT Cooking Paywall Breaker",
+	"name": "NYT Paywall Smasher",
 	"version": "1.0.4",
 	"description": "Gets around that pesty paywall shhhh",
 	"icons": {
@@ -8,7 +8,7 @@
 	},
 	"content_scripts": [
 		{
-			"matches": ["*://cooking.nytimes.com/*"],
+			"matches": ["*://cooking.nytimes.com/*", "*://nytimes.com/*", "*://*.nytimes.com/*"],
 			"js": ["index.js"]
 		}
 	]

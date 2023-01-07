@@ -1,6 +1,6 @@
-# nyt-cooking
+# NYT Paywall Smasher 💥
 
-Hacky paywall avoidance extension for [NYT cooking](https://cooking.nytimes.com/)
+Hacky paywall avoidance extension for [The New York Times](https://www.nytimes.com/) and [NYT cooking](https://cooking.nytimes.com/)
 
 ## Installation
 
@@ -48,15 +48,15 @@ You can use a [safari-web-extension-converter](https://developer.apple.com/docum
 I would recommend moving this into a sibling directory and updating the bundle identifier to something of your fancy.
 
 ```cli
-$ mkdir ../nyt-cooking-safari
-$ cd nyt-cooking-safari
-$ xcrun safari-web-extension-converter ../nyt-cooking --bundle-identifier com.[YOUR NAME HERE].nytCookingPaywallSmasher
+$ mkdir ../nyt-paywall-safari
+$ cd nyt-paywall-safari
+$ xcrun safari-web-extension-converter ../nyt-paywall --bundle-identifier com.[YOUR NAME HERE].nytPaywallSmasher
 ```
 
 - Open Xcode (if it didn't automatically open)
-- Select macOS scheme (`Product` > `Scheme` > `nytCookingPaywallBreaker (macOS)`)
+- Select macOS scheme (`Product` > `Scheme` > `nytPaywallSmasher (macOS)`)
 - Run build (`Product` > `Build`)
 
 - Open Safari
 - Toggle on `Allow Unsigned Extensions` in `Develop` menu
-- Toggle on `NYT Cooking Paywall Smasher` in `Preferences` > `Extensions`
+- Toggle on `NYT Paywall Smasher` in `Preferences` > `Extensions`
