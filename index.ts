@@ -1,6 +1,7 @@
 const noScrollNodeList = ["html", "body"].map((sel) =>
 	document.querySelector(sel)
 );
+const observables = ["#app", "main"].map((sel) => document.querySelector(sel));
 
 const classNames = ["noScroll", "no-scroll"];
 
@@ -10,6 +11,7 @@ const config: MutationObserverInit = {
 };
 
 function removeByQuery(string: keyof HTMLElementTagNameMap | string) {
+	console.debug(`🍳 removing ${string}`);
 	Array.from(document.querySelectorAll(string)).forEach((el) => el.remove());
 }
 
@@ -26,6 +28,7 @@ function removeElements() {
  * an empty div is typically some sort of overlay
  */
 function removeEmptyDiv() {
+	console.debug(`🍳 removing empty divs`);
 	Array.from(document.querySelectorAll("div"))
 		.filter((el) => !el.hasChildNodes())
 		.forEach((el) => el.remove());
@@ -44,6 +47,8 @@ function overrideFixedPosition() {
 			});
 		} catch (e) {}
 	});
+
+	console.debug(`🍳 inlining styles for ${selectors.length} elements`);
 
 	selectors.forEach((sel) => {
 		try {
@@ -75,7 +80,7 @@ function init() {
 		removeElements();
 	});
 
-	noScrollNodeList.forEach((el) => {
+	[...noScrollNodeList, ...observables].forEach((el) => {
 		if (el) observer.observe(el, config);
 	});
 }

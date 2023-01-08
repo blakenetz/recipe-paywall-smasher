@@ -1,12 +1,23 @@
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var noScrollNodeList = ["html", "body"].map(function (sel) {
     return document.querySelector(sel);
 });
+var observables = ["#app", "main"].map(function (sel) { return document.querySelector(sel); });
 var classNames = ["noScroll", "no-scroll"];
 var config = {
     attributes: true,
     attributeFilter: ["class"]
 };
 function removeByQuery(string) {
+    console.debug("\uD83C\uDF73 removing ".concat(string));
     Array.from(document.querySelectorAll(string)).forEach(function (el) { return el.remove(); });
 }
 function removeElements() {
@@ -21,6 +32,7 @@ function removeElements() {
  * an empty div is typically some sort of overlay
  */
 function removeEmptyDiv() {
+    console.debug("\uD83C\uDF73 removing empty divs");
     Array.from(document.querySelectorAll("div"))
         .filter(function (el) { return !el.hasChildNodes(); })
         .forEach(function (el) { return el.remove(); });
@@ -40,6 +52,7 @@ function overrideFixedPosition() {
         }
         catch (e) { }
     });
+    console.debug("\uD83C\uDF73 inlining styles for ".concat(selectors.length, " elements"));
     selectors.forEach(function (sel) {
         var _a;
         try {
@@ -68,7 +81,7 @@ function init() {
         });
         removeElements();
     });
-    noScrollNodeList.forEach(function (el) {
+    __spreadArray(__spreadArray([], noScrollNodeList, true), observables, true).forEach(function (el) {
         if (el)
             observer.observe(el, config);
     });
