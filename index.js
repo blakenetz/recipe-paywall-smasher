@@ -23,6 +23,7 @@ function removeByQuery(string) {
 function removeElements() {
     removeByQuery('[role="dialog"]');
     removeByQuery('[class*="modal"]');
+    removeByQuery('[id*="Auth"]');
     removeByQuery("iframe");
     removeByQuery("[aria-live]");
     removeEmptyDiv();
