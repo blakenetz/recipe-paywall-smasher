@@ -20,9 +20,9 @@
 	},
 	"homepage": "https://github.com/blakenetz/nyt-paywall#readme",
 	"dependencies": {
-		"web-ext": "^7.4.0"
+		"web-ext": "^7.10.0"
 	},
 	"devDependencies": {
-		"typescript": "^4.9.4"
+		"typescript": "^5.3.3"
 	}
 }

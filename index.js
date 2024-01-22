@@ -14,7 +14,7 @@ var observables = ["#app", "main"].map(function (sel) { return document.querySel
 var classNames = ["noScroll", "no-scroll"];
 var config = {
     attributes: true,
-    attributeFilter: ["class"]
+    attributeFilter: ["class"],
 };
 function removeByQuery(string) {
     console.debug("\uD83C\uDF73 removing ".concat(string));
@@ -23,7 +23,7 @@ function removeByQuery(string) {
 function removeElements() {
     removeByQuery('[role="dialog"]');
     removeByQuery('[class*="modal"]');
-    removeByQuery('[id*="Auth"]');
+    // removeByQuery('[id*="Auth"]');
     removeByQuery("iframe");
     removeByQuery("[aria-live]");
     removeEmptyDiv();

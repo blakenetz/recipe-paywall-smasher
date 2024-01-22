@@ -1,9 +1,17 @@
 const noScrollNodeList = ["html", "body"].map((sel) =>
 	document.querySelector(sel)
 );
+
 const observables = ["#app", "main"].map((sel) => document.querySelector(sel));
 
 const classNames = ["noScroll", "no-scroll"];
+
+const removableElements = [
+	'[role="dialog"]',
+	'[class*="modal"]',
+	"iframe",
+	"[aria-live]",
+];
 
 const config: MutationObserverInit = {
 	attributes: true,
@@ -13,16 +21,6 @@ const config: MutationObserverInit = {
 function removeByQuery(string: keyof HTMLElementTagNameMap | string) {
 	console.debug(`🍳 removing ${string}`);
 	Array.from(document.querySelectorAll(string)).forEach((el) => el.remove());
-}
-
-function removeElements() {
-	removeByQuery('[role="dialog"]');
-	removeByQuery('[class*="modal"]');
-	removeByQuery('[id*="Auth"]');
-	removeByQuery("iframe");
-	removeByQuery("[aria-live]");
-	removeEmptyDiv();
-	overrideFixedPosition();
 }
 
 /**
@@ -64,6 +62,12 @@ function removeNoScrollClass(node: Element) {
 		.forEach((cl) => node.classList.remove(cl));
 }
 
+function removeElements() {
+	removableElements.forEach(removeByQuery);
+	removeEmptyDiv();
+	overrideFixedPosition();
+}
+
 function init() {
 	window.onload = function () {
 		removeElements();
@@ -71,7 +75,7 @@ function init() {
 			.map((cl) => document.querySelectorAll(`[class*="${cl}"]`))
 			.map((nodeList) => Array.from(nodeList))
 			.flat()
-			.forEach((node) => removeNoScrollClass(node));
+			.forEach(removeNoScrollClass);
 	};
 
 	const observer = new MutationObserver((mutationsList) => {
