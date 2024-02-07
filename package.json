@@ -4,7 +4,7 @@
 	"description": "Deletes paywall shhhh",
 	"main": "index.js",
 	"scripts": {
-		"build": "tsc index.ts",
+		"build": "ts-node build.ts",
 		"lint:android": "web-ext lint",
 		"sign:android": "web-ext sign --api-key=$(grep AMO_JWT_ISSUER .env | cut -d '=' -f2) --api-secret=$(grep AMO_JWT_SECRET .env | cut -d '=' -f2)",
 		"build:android": "web-ext build"
@@ -20,9 +20,12 @@
 	},
 	"homepage": "https://github.com/blakenetz/nyt-paywall#readme",
 	"dependencies": {
-		"web-ext": "^7.10.0"
+		"web-ext": "^7.11.0"
 	},
 	"devDependencies": {
+		"esbuild": "0.20.0",
+		"esbuild-plugin-copy": "^2.1.1",
+		"ts-node": "^10.9.2",
 		"typescript": "^5.3.3"
 	}
 }
