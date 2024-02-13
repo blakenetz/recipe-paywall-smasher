@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "NYT Paywall Smasher",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "Gets around that pesty paywall shhhh",
 	"icons": {
 		"48": "icons/icon-48.png"
