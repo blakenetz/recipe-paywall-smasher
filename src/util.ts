@@ -101,6 +101,7 @@ export function appendRecipe() {
 			border: "1em solid salmon",
 			background: "white",
 			zIndex: "1000",
+			width: "100vw",
 		},
 		undefined,
 		{ id: "insert" }
