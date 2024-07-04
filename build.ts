@@ -1,10 +1,17 @@
 import { build } from "esbuild";
 import { copy } from "esbuild-plugin-copy";
+import fs from "fs";
+
+const buildDir = "build";
 
 (async () => {
+	if (fs.existsSync(buildDir)) {
+		fs.rmSync(buildDir, { recursive: true });
+	}
+
 	const res = await build({
-		entryPoints: ["./src/index.ts"],
-		outdir: "build",
+		entryPoints: ["./src/**/index.ts"],
+		outdir: buildDir,
 		bundle: true,
 		minify: true,
 		sourcemap: true,
@@ -24,4 +31,6 @@ import { copy } from "esbuild-plugin-copy";
 			}),
 		],
 	});
+
+	console.log(res);
 })();
