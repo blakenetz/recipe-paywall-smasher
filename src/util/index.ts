@@ -93,11 +93,14 @@ export class Overlay {
   expandBtn: HTMLElement;
 
   constructor() {
+    // shared classes
+    const buttonClass = "toggle-button";
+    const hide = "hide";
+
     // dom nodes
     const root = createEl("section", { id: "root" });
     const heading = createEl("div", { id: "heading" });
     const h1 = createEl("h1", { id: "h1" }, "Recipe:");
-    const buttonClass = "toggle-button";
     const collapseBtn = createEl(
       "button",
       { class: buttonClass, id: "collapse" },
@@ -105,13 +108,33 @@ export class Overlay {
     );
     const expandBtn = createEl(
       "button",
-      { class: buttonClass, id: "expand" },
+      { class: [buttonClass, hide].join(" "), id: "expand" },
       "+"
     );
+
+    //  logic
+    function handleClick(e: MouseEvent) {
+      const target = e.target as HTMLButtonElement;
+
+      if (target.id === collapseBtn.id) {
+        expandBtn.classList.remove(hide);
+        root.classList.add(hide);
+      } else {
+        expandBtn.classList.add(hide);
+        root.classList.remove(hide);
+      }
+    }
+    collapseBtn.addEventListener("click", handleClick);
+    expandBtn.addEventListener("click", handleClick);
+    addEventListener("beforeunload", () => {
+      collapseBtn.removeEventListener("click", handleClick);
+      expandBtn.removeEventListener("click", handleClick);
+    });
 
     // styles
     const style = document.createElement("style");
     const styleRules = generateCssRule({
+      [`.${hide}`]: { display: "none" },
       [`#${root.id}`]: {
         padding: "1em",
         position: "absolute",
@@ -146,34 +169,17 @@ export class Overlay {
       },
     });
 
+    // collapse nodes
     heading.append(h1);
     heading.append(collapseBtn);
     root.append(heading);
-
     style.appendChild(styleRules);
-    document.getElementsByTagName("head")[0].appendChild(style);
 
-    // button logic
-    function handleClick(e: MouseEvent) {
-      const target = e.target as HTMLButtonElement;
-
-      if (target.id === collapseBtn.id) {
-        expandBtn.style.display = "block";
-        root.style.display = "none";
-      } else {
-        expandBtn.style.display = "none";
-        root.style.display = "block";
-      }
-    }
-    collapseBtn.addEventListener("click", handleClick);
-    expandBtn.addEventListener("click", handleClick);
-    addEventListener("beforeunload", () => {
-      collapseBtn.removeEventListener("click", handleClick);
-      expandBtn.removeEventListener("click", handleClick);
-    });
-
+    // update document
     const documentBody = getNode("body");
+    documentBody.prepend(root);
     documentBody.append(expandBtn);
+    document.getElementsByTagName("head")[0].appendChild(style);
 
     this.root = root;
     this.expandBtn = expandBtn;

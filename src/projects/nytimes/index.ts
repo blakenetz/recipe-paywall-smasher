@@ -18,14 +18,9 @@ function getRootEl() {
 }
 
 function appendRecipe() {
-  // fetch target elements
-  const documentBody = getNode("body");
+  const overlay = new Overlay();
   const recipe = cloneNode(".recipe");
 
-  const overlay = new Overlay();
-
-  // DOM mutations
-  documentBody.prepend(overlay.root);
   overlay.root.append(recipe);
 }
 

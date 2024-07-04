@@ -62,14 +62,9 @@ function instantiateMutation() {
 }
 
 function appendRecipe() {
-  // fetch target elements
-  const documentBody = getNode("body");
+  const overlay = new Overlay();
   const { header, body, footer } = getPageEls();
 
-  const overlay = new Overlay();
-
-  // DOM mutations
-  documentBody.prepend(overlay.root);
   overlay.root.append(header);
   overlay.root.append(body);
   overlay.root.append(footer);
