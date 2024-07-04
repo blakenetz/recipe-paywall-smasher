@@ -1,19 +1,5 @@
 import { cloneNode, getNode, Overlay, removeElements } from "@/util";
 
-type PageEls = {
-  header: HTMLElement;
-  body: HTMLElement;
-  footer: HTMLElement;
-};
-
-function getPageEls(): PageEls {
-  return {
-    header: cloneNode('[data-testid="RecipePageLedBackground"]'),
-    body: cloneNode("[class^='recipe']"),
-    footer: cloneNode('[data-testid="RecipePagContentBackground"]'),
-  };
-}
-
 function getRootEl() {
   return getNode("#app-root");
 }
@@ -62,12 +48,11 @@ function instantiateMutation() {
 }
 
 function appendRecipe() {
-  const overlay = new Overlay();
-  const { header, body, footer } = getPageEls();
-
-  overlay.root.append(header);
-  overlay.root.append(body);
-  overlay.root.append(footer);
+  new Overlay([
+    '[data-testid="RecipePageLedBackground"]',
+    "[class^='recipe']",
+    '[data-testid="RecipePagContentBackground"]',
+  ]);
 }
 
 function init() {

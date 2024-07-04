@@ -18,10 +18,7 @@ function getRootEl() {
 }
 
 function appendRecipe() {
-  const overlay = new Overlay();
-  const recipe = cloneNode(".recipe");
-
-  overlay.root.append(recipe);
+  new Overlay([".recipe"]);
 }
 
 function instantiateMutation() {

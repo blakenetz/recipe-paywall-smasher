@@ -1,3 +1,5 @@
+type Query = keyof HTMLElementTagNameMap | string;
+
 function log(s: string, ...args: string[]) {
   console.debug(`🍳 ${s}`, ...args);
 }
@@ -35,14 +37,12 @@ function removeEmptyDiv() {
     .forEach((el) => el.remove());
 }
 
-function removeByQuery(string: keyof HTMLElementTagNameMap | string) {
-  log(`🍳 removing ${string}`);
-  Array.from(document.querySelectorAll(string)).forEach((el) => el.remove());
+function removeByQuery(query: Query) {
+  log(`🍳 removing ${query}`);
+  Array.from(document.querySelectorAll(query)).forEach((el) => el.remove());
 }
 
-export function removeElements(
-  queries: (keyof HTMLElementTagNameMap | string)[]
-) {
+export function removeElements(queries: Query[]) {
   console.debug(`🍳 removing nodes`);
   removeEmptyDiv();
   queries.forEach(removeByQuery);
@@ -92,7 +92,7 @@ export class Overlay {
   root: HTMLElement;
   expandBtn: HTMLElement;
 
-  constructor() {
+  constructor(queries: Query[]) {
     // shared classes
     const buttonClass = "toggle-button";
     const hide = "hide";
@@ -169,11 +169,12 @@ export class Overlay {
       },
     });
 
-    // collapse nodes
+    // combine nodes
+    style.appendChild(styleRules);
     heading.append(h1);
     heading.append(collapseBtn);
     root.append(heading);
-    style.appendChild(styleRules);
+    queries.forEach((q) => root.append(cloneNode(q)));
 
     // update document
     const documentBody = getNode("body");
