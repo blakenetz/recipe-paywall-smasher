@@ -1,6 +1,11 @@
-# NYT Paywall Smasher 💥
+# Recipe Paywall Smasher 💥
 
-Hacky paywall avoidance extension for [The New York Times](https://www.nytimes.com/) and [NYT cooking](https://cooking.nytimes.com/)
+Hacky paywall avoidance extension for:
+
+- [The New York Times](https://www.nytimes.com/)
+- [NYT cooking](https://cooking.nytimes.com/)
+- [Bon Appetit](https://www.bonappetit.com/)
+- [Epicurious](https://www.epicurious.com/)
 
 ## Installation
 

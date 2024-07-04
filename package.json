@@ -1,5 +1,5 @@
 {
-	"name": "nyt-paywall-smasher",
+	"name": "recipe-paywall-smasher",
 	"version": "2.0.1",
 	"description": "Deletes paywall shhhh",
 	"main": "index.js",
@@ -11,14 +11,14 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/blakenetz/nyt-paywall.git"
+		"url": "git+https://github.com/blakenetz/recipe-paywall-smasher.git"
 	},
 	"author": "blake<blake.netzeband@gmail.com>",
 	"license": "ISC",
 	"bugs": {
-		"url": "https://github.com/blakenetz/nyt-paywall/issues"
+		"url": "https://github.com/blakenetz/recipe-paywall-smasher/issues"
 	},
-	"homepage": "https://github.com/blakenetz/nyt-paywall#readme",
+	"homepage": "https://github.com/blakenetz/recipe-paywall-smasher#readme",
 	"dependencies": {
 		"web-ext": "^7.11.0"
 	},
