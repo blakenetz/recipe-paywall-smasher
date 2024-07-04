@@ -1,10 +1,10 @@
 type Query = keyof HTMLElementTagNameMap | string;
 
-function log(s: string, ...args: string[]) {
+function log(s: string, ...args: any[]) {
   console.debug(`🍳 ${s}`, ...args);
 }
 
-export function getNode<E extends Element>(selector: string): E {
+function getNode<E extends Element>(selector: string): E {
   const el = document.querySelector<E>(selector);
 
   if (el === null) {
@@ -17,7 +17,7 @@ export function getNode<E extends Element>(selector: string): E {
 /**
  * Deep clone node and return it wrapped in a `section` element
  */
-export function cloneNode(selector: string) {
+function cloneNode(selector: string) {
   const el = getNode(selector);
   const cloneEl = el.cloneNode(true);
 
@@ -31,19 +31,19 @@ export function cloneNode(selector: string) {
  * an empty div is typically some sort of overlay
  */
 function removeEmptyDiv() {
-  log(`🍳 removing empty divs`);
+  log(`removing empty divs`);
   Array.from(document.querySelectorAll("div"))
     .filter((el) => !el.hasChildNodes())
     .forEach((el) => el.remove());
 }
 
 function removeByQuery(query: Query) {
-  log(`🍳 removing ${query}`);
+  log(`removing ${query}`);
   Array.from(document.querySelectorAll(query)).forEach((el) => el.remove());
 }
 
-export function removeElements(queries: Query[]) {
-  console.debug(`🍳 removing nodes`);
+function removeElements(queries: Query[]) {
+  log(`removing nodes`);
   removeEmptyDiv();
   queries.forEach(removeByQuery);
 }
@@ -88,11 +88,9 @@ function createEl(
   return el;
 }
 
-export class Overlay {
-  root: HTMLElement;
-  expandBtn: HTMLElement;
-
+class Overlay {
   constructor(queries: Query[]) {
+    log("Instantiating overlay");
     // shared classes
     const buttonClass = "toggle-button";
     const hide = "hide";
@@ -181,8 +179,54 @@ export class Overlay {
     documentBody.prepend(root);
     documentBody.append(expandBtn);
     document.getElementsByTagName("head")[0].appendChild(style);
-
-    this.root = root;
-    this.expandBtn = expandBtn;
   }
+}
+
+function instantiateMutation(queries: Query[], target: Query) {
+  const callback: MutationCallback = (mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node instanceof Element) {
+          queries.forEach((query) => {
+            if (node.matches(query) || node.querySelectorAll(query).length) {
+              log(`removing ${node.childElementCount} node`);
+              try {
+                node.remove();
+              } catch (error) {
+                log(`error removing node: `, error);
+              }
+            }
+          });
+        }
+      });
+    });
+  };
+
+  const observer = new MutationObserver(callback);
+  const mutationTarget = getNode(target);
+
+  log(`instantiating observer`);
+  observer.observe(mutationTarget, { subtree: true, childList: true });
+
+  return observer;
+}
+
+export function init(queries: Query[], appRoot: Query) {
+  // instantiate observers
+  const observer = instantiateMutation(queries, appRoot);
+
+  window.onload = function () {
+    removeElements(queries);
+    new Overlay([
+      '[data-testid="RecipePageLedBackground"]',
+      "[class^='recipe']",
+      '[data-testid="RecipePagContentBackground"]',
+    ]);
+  };
+
+  // clean up
+  addEventListener("beforeunload", () => {
+    log("disconnecting");
+    observer.disconnect();
+  });
 }
