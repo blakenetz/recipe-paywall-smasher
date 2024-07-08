@@ -4,7 +4,9 @@ function log(s: string, ...args: any[]) {
   console.debug(`🍳 ${s}`, ...args);
 }
 
-function getNode<E extends Element>(selector: string): E {
+const hideClass = "hide";
+
+function getNode<E extends Element = Element>(selector: string): E {
   const el = document.querySelector<E>(selector);
 
   if (el === null) {
@@ -31,19 +33,21 @@ function cloneNode(selector: string) {
  * an empty div is typically some sort of overlay
  */
 function removeEmptyDiv() {
-  log(`removing empty divs`);
+  log("hiding empty divs");
   Array.from(document.querySelectorAll("div"))
     .filter((el) => !el.hasChildNodes())
-    .forEach((el) => el.remove());
+    .forEach((el) => el.classList.add(hideClass));
 }
 
 function removeByQuery(query: Query) {
-  log(`removing ${query}`);
-  Array.from(document.querySelectorAll(query)).forEach((el) => el.remove());
+  log(`hiding ${query}`);
+  Array.from(document.querySelectorAll(query)).forEach((el) =>
+    el.classList.add(hideClass)
+  );
 }
 
 function removeElements(queries: Query[]) {
-  log(`removing nodes`);
+  log(`hiding nodes`);
   removeEmptyDiv();
   queries.forEach(removeByQuery);
 }
@@ -89,11 +93,14 @@ function createEl(
 }
 
 class Overlay {
+  public root: HTMLElement;
+  public expandBtn: HTMLElement;
+  private style: HTMLStyleElement;
+
   constructor(queries: Query[]) {
     log("Instantiating overlay");
     // shared classes
     const buttonClass = "toggle-button";
-    const hide = "hide";
 
     // dom nodes
     const root = createEl("section", { id: "root" });
@@ -106,7 +113,7 @@ class Overlay {
     );
     const expandBtn = createEl(
       "button",
-      { class: [buttonClass, hide].join(" "), id: "expand" },
+      { class: [buttonClass, hideClass].join(" "), id: "expand" },
       "+"
     );
 
@@ -115,11 +122,11 @@ class Overlay {
       const target = e.target as HTMLButtonElement;
 
       if (target.id === collapseBtn.id) {
-        expandBtn.classList.remove(hide);
-        root.classList.add(hide);
+        expandBtn.classList.remove(hideClass);
+        root.classList.add(hideClass);
       } else {
-        expandBtn.classList.add(hide);
-        root.classList.remove(hide);
+        expandBtn.classList.add(hideClass);
+        root.classList.remove(hideClass);
       }
     }
     collapseBtn.addEventListener("click", handleClick);
@@ -132,7 +139,7 @@ class Overlay {
     // styles
     const style = document.createElement("style");
     const styleRules = generateCssRule({
-      [`.${hide}`]: { display: "none" },
+      [`.${hideClass}`]: { display: "none !important" },
       [`#${root.id}`]: {
         padding: "1em",
         position: "absolute",
@@ -148,12 +155,11 @@ class Overlay {
         marginBottom: "1em",
       },
       [`#${h1.id}`]: { margin: "0" },
-      [`#${collapseBtn.id}`]: { display: "block" },
       [`#${expandBtn.id}`]: {
         position: "fixed",
         bottom: "1em",
         right: "1.5em",
-        display: "none",
+        zIndex: "1000",
       },
       [`.${buttonClass}`]: {
         height: "2em",
@@ -174,59 +180,99 @@ class Overlay {
     root.append(heading);
     queries.forEach((q) => root.append(cloneNode(q)));
 
-    // update document
+    this.root = root;
+    this.expandBtn = expandBtn;
+    this.style = style;
+  }
+
+  attach() {
     const documentBody = getNode("body");
-    documentBody.prepend(root);
-    documentBody.append(expandBtn);
-    document.getElementsByTagName("head")[0].appendChild(style);
+    documentBody.prepend(this.root);
+    documentBody.append(this.expandBtn);
+    document.getElementsByTagName("head")[0].appendChild(this.style);
   }
 }
 
-function instantiateMutation(queries: Query[], target: Query) {
-  const callback: MutationCallback = (mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node instanceof Element) {
-          queries.forEach((query) => {
-            if (node.matches(query) || node.querySelectorAll(query).length) {
-              log(`removing ${node.childElementCount} node`);
-              try {
-                node.remove();
-              } catch (error) {
-                log(`error removing node: `, error);
+class PaywallSmasher {
+  removableQueries: Query[];
+  overlay: Overlay;
+  observer: MutationObserver;
+  appRoot: HTMLElement;
+
+  constructor(
+    appRoot: Query,
+    recipeQueries: Query[],
+    removableQueries: Query[] = []
+  ) {
+    this.appRoot = getNode(appRoot);
+    this.removableQueries = [
+      '[role*="dialog"]', // includes `alertdialog` as well
+      "iframe",
+      '[aria-live="assertive"]',
+      '[class*="Modal"]',
+      '[class*="modal"]',
+      '[class*="InterstitialWrapper"]',
+      '[class*="Paywall"]',
+      '[class*="PersistentBottom"]',
+      ...removableQueries,
+    ];
+    this.overlay = new Overlay(recipeQueries);
+    this.observer = this.createObserver();
+    this.registerEventListeners();
+  }
+
+  public registerEventListeners() {
+    addEventListener("load", this.load);
+    addEventListener("beforeunload", this.unload);
+  }
+
+  public createObserver() {
+    const callback: MutationCallback = (mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            this.removableQueries.forEach((query) => {
+              if (
+                node.id !== this.overlay.root.id &&
+                (node.matches(query) || node.querySelectorAll(query).length)
+              ) {
+                log(`hiding ${node.childElementCount} node`);
+                try {
+                  node.classList.add(hideClass);
+                } catch (error) {
+                  log(`error hiding node: `, error);
+                }
               }
-            }
-          });
-        }
+            });
+          }
+        });
       });
-    });
-  };
+    };
 
-  const observer = new MutationObserver(callback);
-  const mutationTarget = getNode(target);
+    return new MutationObserver(callback);
+  }
 
-  log(`instantiating observer`);
-  observer.observe(mutationTarget, { subtree: true, childList: true });
+  private load() {
+    log("connecting");
+    removeElements(this.removableQueries);
+    this.overlay.attach();
+    this.observer.observe(this.appRoot, { subtree: true, childList: true });
+  }
 
-  return observer;
+  private unload() {
+    log("disconnecting");
+    this.observer.disconnect();
+  }
 }
 
-export function init(queries: Query[], appRoot: Query) {
-  // instantiate observers
-  const observer = instantiateMutation(queries, appRoot);
-
-  window.onload = function () {
-    removeElements(queries);
-    new Overlay([
-      '[data-testid="RecipePageLedBackground"]',
-      "[class^='recipe']",
-      '[data-testid="RecipePagContentBackground"]',
-    ]);
-  };
-
-  // clean up
-  addEventListener("beforeunload", () => {
-    log("disconnecting");
-    observer.disconnect();
-  });
+export function init(
+  appRoot: Query,
+  recipeQueries: Query[],
+  removableQueries: Query[] = []
+) {
+  try {
+    new PaywallSmasher(appRoot, recipeQueries, removableQueries);
+  } catch (error) {
+    log("Failed to initialize paywall smasher", error);
+  }
 }
