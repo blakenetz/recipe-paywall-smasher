@@ -1,5 +1,4 @@
-import { Overlay } from ".";
-import { getNode, hideClass, log, Query } from "./common";
+import { Overlay, getNode, hideClass, log, Query } from ".";
 
 function removeElements(queries: Query[]) {
   log(`hiding nodes`);

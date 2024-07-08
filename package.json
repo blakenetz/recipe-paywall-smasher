@@ -20,6 +20,7 @@
 	},
 	"homepage": "https://github.com/blakenetz/recipe-paywall-smasher#readme",
 	"dependencies": {
+		"openai": "^4.52.3",
 		"web-ext": "^7.11.0"
 	},
 	"devDependencies": {

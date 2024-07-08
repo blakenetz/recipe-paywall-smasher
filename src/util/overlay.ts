@@ -1,4 +1,4 @@
-import { getNode, hideClass, log, Query } from "./common";
+import { getNode, hideClass, log, Query } from ".";
 
 /**
  * Deep clone node and return it wrapped in a `section` element
