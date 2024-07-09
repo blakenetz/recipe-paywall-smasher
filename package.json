@@ -20,6 +20,8 @@
 	},
 	"homepage": "https://github.com/blakenetz/recipe-paywall-smasher#readme",
 	"dependencies": {
+		"@tensorflow-models/qna": "^1.0.2",
+		"@tensorflow/tfjs": "^4.20.0",
 		"openai": "^4.52.3",
 		"web-ext": "^7.11.0"
 	},
