@@ -51,9 +51,9 @@ class PaywallSmasher {
     this.registerEventListeners();
   }
 
-  public registerEventListeners() {
-    addEventListener("load", this.load);
-    addEventListener("beforeunload", this.unload);
+  private registerEventListeners() {
+    addEventListener("load", () => this.load());
+    addEventListener("beforeunload", () => this.unload());
   }
 
   public createObserver() {
