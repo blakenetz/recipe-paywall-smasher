@@ -49,41 +49,29 @@ class PaywallSmasher {
       ...nodesToHide,
     ];
     this.nodesToReset = ["[class*=no-scroll]", ...nodesToReset];
+    this.resetNodes();
     this.overlay = new Overlay(recipeNodes);
+
     this.observer = this.createObserver();
     this.registerEventListeners();
-  }
-
-  public registerEventListeners() {
-    addEventListener("load", () => this.load());
-    addEventListener("beforeunload", () => this.unload());
   }
 
   private createObserver() {
     const callback: MutationCallback = (mutations) => {
       mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node instanceof Element) {
-            this.addHideClass(node);
-            this.resetNode(node);
-          }
-        });
+        if (mutation.type === "attributes") {
+          this.resetNodes();
+        } else {
+          mutation.addedNodes.forEach((node) => {
+            if (node instanceof Element) {
+              this.addHideClass(node);
+            }
+          });
+        }
       });
     };
 
     return new MutationObserver(callback);
-  }
-
-  private load() {
-    log("connecting");
-    removeElements(this.nodesToHide);
-    this.overlay.attach();
-    this.observer.observe(this.appRoot, { subtree: true, childList: true });
-  }
-
-  private unload() {
-    log("disconnecting");
-    this.observer.disconnect();
   }
 
   private qualifyNode(node: Element, query: string) {
@@ -105,8 +93,12 @@ class PaywallSmasher {
       }
     });
   }
-  private resetNode(node: Element) {
+  private resetNodes() {
     this.nodesToReset.forEach((query) => {
+      const node = document.querySelector(query);
+
+      if (!node) return;
+
       if (this.qualifyNode(node, query)) {
         log(`resetting ${node.childElementCount} node`);
         try {
@@ -116,6 +108,28 @@ class PaywallSmasher {
         }
       }
     });
+  }
+
+  public registerEventListeners() {
+    addEventListener("load", () => this.load());
+    addEventListener("beforeunload", () => this.unload());
+  }
+
+  private load() {
+    log("connecting");
+    removeElements(this.nodesToHide);
+    this.overlay.attach();
+    this.observer.observe(this.appRoot, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
+  private unload() {
+    log("disconnecting");
+    this.observer.disconnect();
   }
 }
 
