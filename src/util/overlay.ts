@@ -60,8 +60,7 @@ export class Overlay {
 
   constructor(queries: Query[]) {
     log("Instantiating overlay");
-    // shared classes
-    const buttonClass = "toggle-button";
+    const buttonClass = "rps-toggle-btn";
 
     // dom nodes
     const root = createEl("section", { id: "root" });

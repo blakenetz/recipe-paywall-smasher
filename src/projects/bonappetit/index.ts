@@ -2,10 +2,6 @@ import { init } from "@/util";
 
 const appRoot = "#app-root";
 
-const recipeQueries = [
-  '[data-testid="RecipePageLedBackground"]',
-  "[class^='recipe']",
-  '[data-testid="RecipePagContentBackground"]',
-];
+const recipeNodes = ["[class^='recipe']"];
 
-init(appRoot, recipeQueries);
+init(appRoot, recipeNodes);
