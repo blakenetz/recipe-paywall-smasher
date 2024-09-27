@@ -78,29 +78,37 @@ export class Overlay {
     );
 
     /** event handlers */
-    function handleClick(e: MouseEvent) {
+    function hide() {
+      expandBtn.classList.remove(hideClass);
+      root.classList.add(hideClass);
+    }
+    function show() {
+      expandBtn.classList.add(hideClass);
+      root.classList.remove(hideClass);
+    }
+
+    function handleButtonClick(e: MouseEvent) {
       const target = e.target as HTMLButtonElement;
 
-      if (target.id === collapseBtn.id) {
-        expandBtn.classList.remove(hideClass);
-        root.classList.add(hideClass);
-      } else {
-        expandBtn.classList.add(hideClass);
-        root.classList.remove(hideClass);
-      }
+      if (target.id === collapseBtn.id) hide();
+      else show();
     }
     function handleKeyup(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        expandBtn.classList.remove(hideClass);
-        root.classList.add(hideClass);
-      }
+      if (e.key === "Escape") hide();
     }
-    collapseBtn.addEventListener("click", handleClick);
-    expandBtn.addEventListener("click", handleClick);
+    function handleDocumentClick(e: MouseEvent) {
+      const { target } = e;
+      if (target instanceof Node && root.contains(target)) hide();
+    }
+    collapseBtn.addEventListener("click", handleButtonClick);
+    expandBtn.addEventListener("click", handleButtonClick);
     document.addEventListener("keyup", handleKeyup);
+    document.addEventListener("click", handleDocumentClick);
     addEventListener("beforeunload", () => {
-      collapseBtn.removeEventListener("click", handleClick);
-      expandBtn.removeEventListener("click", handleClick);
+      collapseBtn.removeEventListener("click", handleButtonClick);
+      expandBtn.removeEventListener("click", handleButtonClick);
+      document.removeEventListener("keyup", handleKeyup);
+      document.removeEventListener("click", handleDocumentClick);
     });
 
     /** styles */
@@ -115,6 +123,8 @@ export class Overlay {
         background: "white",
         zIndex: "1000",
         width: "100vw",
+        height: "95%",
+        overflow: "scroll",
       },
       [`#${heading.id}`]: {
         display: "flex",
