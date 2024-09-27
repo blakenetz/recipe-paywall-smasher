@@ -21,8 +21,8 @@
     },
     {
       "matches": [
-        "*://*.epicurious.com/recipes/*",
-        "*://epicurious.com/recipes/*"
+        "*://*.epicurious.com/recipes/**/*",
+        "*://epicurious.com/recipes/**/*"
       ],
       "js": ["epicurious/index.js"]
     }
