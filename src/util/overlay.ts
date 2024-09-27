@@ -62,7 +62,7 @@ export class Overlay {
     log("Instantiating overlay");
     const buttonClass = "rps-toggle-btn";
 
-    // dom nodes
+    /** dom nodes */
     const root = createEl("section", { id: "root" });
     const heading = createEl("div", { id: "heading" });
     const h1 = createEl("h1", { id: "h1" }, "Recipe:");
@@ -77,7 +77,7 @@ export class Overlay {
       "+"
     );
 
-    //  logic
+    /** event handlers */
     function handleClick(e: MouseEvent) {
       const target = e.target as HTMLButtonElement;
 
@@ -89,20 +89,27 @@ export class Overlay {
         root.classList.remove(hideClass);
       }
     }
+    function handleKeyup(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        expandBtn.classList.remove(hideClass);
+        root.classList.add(hideClass);
+      }
+    }
     collapseBtn.addEventListener("click", handleClick);
     expandBtn.addEventListener("click", handleClick);
+    document.addEventListener("keyup", handleKeyup);
     addEventListener("beforeunload", () => {
       collapseBtn.removeEventListener("click", handleClick);
       expandBtn.removeEventListener("click", handleClick);
     });
 
-    // styles
+    /** styles */
     const style = document.createElement("style");
     const styleRules = generateCssRule({
       [`.${hideClass}`]: { display: "none !important" },
       [`#${root.id}`]: {
         padding: "1em",
-        position: "absolute",
+        position: "fixed",
         top: "0",
         border: "1em solid salmon",
         background: "white",
@@ -133,7 +140,7 @@ export class Overlay {
       },
     });
 
-    // combine nodes
+    /** combine nodes */
     style.appendChild(styleRules);
     heading.append(h1);
     heading.append(collapseBtn);
