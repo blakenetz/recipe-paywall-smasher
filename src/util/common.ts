@@ -10,8 +10,8 @@ export function getNode<E extends Element = Element>(selector: string): E {
   const el = document.querySelector<E>(selector);
 
   if (el === null) {
-    throw Error(`🍳 Unable to find element: ${selector}`);
+    log(`🍳 Unable to find element: ${selector}`);
   }
 
-  return el;
+  return el ?? (document.createElement("div") as unknown as E);
 }
