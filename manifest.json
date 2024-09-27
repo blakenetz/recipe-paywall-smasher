@@ -10,18 +10,23 @@
 		{
 			"matches": [
 				"*://cooking.nytimes.com/recipes/*",
-				"*://nytimes.com/recipes/*",
-				"*://*.nytimes.com/recipes/*"
+				"*://nytimes.com/recipes/*"
 			],
 			"js": ["nytimes/index.js"]
 		},
 		{
 			"matches": [
-				"*://www.bonappetit.com/*",
-				"*://bonappetit.com/*",
-				"*://*/bonappetit.com/*"
+				"*://*.bonappetit.com/recipe/*",
+				"*://bonappetit.com/recipe/*"
 			],
 			"js": ["bonappetit/index.js"]
+		},
+		{
+			"matches": [
+				"*://*.epicurious.com/recipes/*",
+				"*://epicurious.com/recipes/*"
+			],
+			"js": ["epicurious/index.js"]
 		}
 	]
 }
