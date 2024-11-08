@@ -82,6 +82,7 @@ export class Overlay {
       expandBtn.classList.remove(hideClass);
       root.classList.add(hideClass);
     }
+
     function show() {
       expandBtn.classList.add(hideClass);
       root.classList.remove(hideClass);
@@ -93,13 +94,23 @@ export class Overlay {
       if (target.id === collapseBtn.id) hide();
       else show();
     }
+
     function handleKeyup(e: KeyboardEvent) {
       if (e.key === "Escape") hide();
     }
+
     function handleDocumentClick(e: MouseEvent) {
       const { target } = e;
-      if (target instanceof Node && root.contains(target)) hide();
+
+      if (
+        target instanceof HTMLElement &&
+        target.id !== expandBtn.id &&
+        !root.contains(target)
+      ) {
+        hide();
+      }
     }
+
     collapseBtn.addEventListener("click", handleButtonClick);
     expandBtn.addEventListener("click", handleButtonClick);
     document.addEventListener("keyup", handleKeyup);
