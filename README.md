@@ -6,6 +6,7 @@ Hacky paywall avoidance extension for:
 - [NYT cooking](https://cooking.nytimes.com/)
 - [Bon Appetit](https://www.bonappetit.com/)
 - [Epicurious](https://www.epicurious.com/)
+- [Molly Baz](https://mollybaz.com/)
 
 ## Installation
 
