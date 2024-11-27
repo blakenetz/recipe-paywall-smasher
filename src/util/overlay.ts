@@ -154,6 +154,7 @@ export class Overlay {
         width: "2em",
         borderRadius: "90px",
         background: "salmon",
+        padding: "0",
       },
       [`.${buttonClass}:hover, .${buttonClass}:focus`]: {
         backgroundColor: "rgb(250 128 114 / 70%)",

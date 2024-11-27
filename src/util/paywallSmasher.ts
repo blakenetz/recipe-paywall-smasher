@@ -50,6 +50,7 @@ class PaywallSmasher {
     ];
     this.nodesToReset = ["[class*=no-scroll]", ...nodesToReset];
     this.resetNodes();
+
     this.overlay = new Overlay(recipeNodes);
 
     this.observer = this.createObserver();
