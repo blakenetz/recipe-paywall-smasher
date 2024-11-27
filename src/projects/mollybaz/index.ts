@@ -2,6 +2,6 @@ import { init } from "@/util";
 
 const nodesToHide = ["div.fl-row-bg-gradient"];
 const appRoot = ".site-container";
-const recipeNodes = ['[data-type="part"]'];
+const recipeNodes = ['[data-type="part"] .fl-html'];
 
 init(appRoot, recipeNodes, nodesToHide);
